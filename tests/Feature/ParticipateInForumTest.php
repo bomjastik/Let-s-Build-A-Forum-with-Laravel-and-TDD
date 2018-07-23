@@ -2,9 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Reply;
-use App\Thread;
-use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,11 +13,12 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function an_authenticated_user_may_participate_in_forum_threads()
     {
-        $thread = factory(Thread::class)->create();
+        $thread = create('thread');
 
-        $reply = factory(Reply::class)->make();
+        $reply = make('reply');
 
-        $this->actingAs(factory(User::class)->create());
+        $this->signIn();
+
         $this->post(route('threads.replies.store', $thread->id), ['body' => $reply->body]);
 
         $this->get($thread->url())
@@ -30,11 +28,9 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     public function unauthenticated_user_may_not_add_replies()
     {
-        $thread = factory(Thread::class)->create();
-
         $this->expectException('Illuminate\Auth\AuthenticationException');
 
-        $this->post(route('threads.replies.store', $thread->id), []);
+        $this->post(route('threads.replies.store', create('thread')->id), []);
     }
 
 }

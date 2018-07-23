@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Thread;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +16,7 @@ class ThreadsTest extends TestCase
     {
         parent::setUp();
 
-        $this->thread = factory(Thread::class)->create([
+        $this->thread = create('thread', [
             'title' => 'Test title',
             'body' => 'Test body'
         ]);
@@ -46,7 +45,7 @@ class ThreadsTest extends TestCase
     {
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->thread->replies);
     }
-    
+
     /** @test */
     public function it_can_add_a_reply()
     {

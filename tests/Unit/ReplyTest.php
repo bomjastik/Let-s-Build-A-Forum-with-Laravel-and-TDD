@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Reply;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +16,7 @@ class ReplyTest extends TestCase
     {
         parent::setUp();
 
-        $this->reply = factory(Reply::class)->create([
+        $this->reply = create('reply', [
             'body' => 'Test body'
         ]);
     }

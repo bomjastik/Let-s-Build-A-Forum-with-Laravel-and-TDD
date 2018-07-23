@@ -2,7 +2,6 @@
 
 namespace Tests\Browser;
 
-use App\Thread;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -17,7 +16,7 @@ class ThreadsTest extends DuskTestCase
     {
         parent::setUp();
 
-        $this->thread = factory(Thread::class)->create();
+        $this->thread = create('thread');
     }
 
     /**

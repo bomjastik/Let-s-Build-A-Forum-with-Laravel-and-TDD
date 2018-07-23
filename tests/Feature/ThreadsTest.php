@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Thread;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +16,7 @@ class ThreadsTest extends TestCase
     {
         parent::setUp();
 
-        $this->thread = factory(Thread::class)->create();
+        $this->thread = create('thread');
     }
 
     /** @test */
