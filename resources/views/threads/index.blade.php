@@ -22,6 +22,10 @@
                 </div>
 
                 @endforeach
+
+                <div class="mt-5">
+                    {{ $threads->links() }}
+                </div>
             </div>
         </div>
     </div>

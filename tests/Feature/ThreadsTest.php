@@ -11,23 +11,26 @@ class ThreadsTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $thread;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->thread = factory(Thread::class)->create();
+    }
+
     /** @test */
     public function it_can_return_all_threads()
     {
-        $thread = factory(Thread::class)->create();
-
-        $response = $this->get('threads');
-
-        $response->assertSee($thread->title);
+        $this->get('threads')
+            ->assertSee($this->thread->title);
     }
 
     /** @test */
     public function it_can_return_a_specific_thread()
     {
-        $thread = factory(Thread::class)->create();
-
-        $response = $this->get($thread->url());
-
-        $response->assertSee($thread->title);
+        $this->get($this->thread->url())
+            ->assertSee($this->thread->title);
     }
 }
