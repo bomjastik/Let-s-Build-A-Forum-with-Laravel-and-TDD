@@ -5,8 +5,6 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
 
-                <h1 class="mb-4">Forum Threads</h1>
-
                 @foreach($threads as $thread)
 
                 <div class="card mb-3">

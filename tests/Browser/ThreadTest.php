@@ -23,7 +23,7 @@ class ThreadTest extends DuskTestCase
      * @test
      * @throws \Throwable
      */
-    public function a_user_can_browse_a_specific_thread()
+    public function user_can_see_thread()
     {
         $thread = $this->thread;
 
@@ -39,7 +39,7 @@ class ThreadTest extends DuskTestCase
      * @test
      * @throws \Throwable
      */
-    public function a_user_can_read_replies_for_the_thread()
+    public function user_can_see_thread_replies()
     {
         $thread = $this->thread;
 
@@ -53,56 +53,4 @@ class ThreadTest extends DuskTestCase
         });
     }
 
-    /**
-     * @test
-     * @throws \Throwable
-     */
-    public function an_authenticated_user_can_see_a_reply_form()
-    {
-        $thread = $this->thread;
-
-        $this->browse(function (Browser $browser) use ($thread) {
-            $browser->resize(1920, 1080);
-
-            $browser->loginAs(create('user'))
-                ->visit($thread->url())
-                ->assertVisible('@reply-form');
-        });
-    }
-
-    /**
-     * @test
-     * @throws \Throwable
-     */
-    public function unauthenticated_user_can_not_see_a_reply_form()
-    {
-        $thread = $this->thread;
-
-        $this->browse(function (Browser $browser) use ($thread) {
-            $browser->resize(1920, 1080);
-
-            $browser->visit($thread->url())
-                ->assertMissing('@reply-form')
-                ->assertVisible('@login-alert');
-        });
-    }
-
-    /**
-     * @test
-     * @throws \Throwable
-     */
-    public function an_authenticated_user_can_submit_a_new_reply()
-    {
-        $thread = $this->thread;
-
-        $this->browse(function (Browser $browser) use ($thread) {
-            $browser->resize(1920, 1080);
-
-            $browser->loginAs(create('user'))
-                ->visit($thread->url())
-                ->type('@reply-body', 'Test reply')
-                ->press('@add-reply')
-                ->assertSee('Test reply');
-        });
-    }
 }

@@ -23,7 +23,7 @@ class ThreadsTest extends DuskTestCase
      * @test
      * @throws \Throwable
      */
-    public function a_user_can_browse_threads()
+    public function user_can_see_threads()
     {
         $thread = $this->thread;
 
@@ -39,7 +39,7 @@ class ThreadsTest extends DuskTestCase
      * @test
      * @throws \Throwable
      */
-    public function a_user_can_click_thread_title_on_the_threads_list()
+    public function user_can_see_thread()
     {
         $thread = $this->thread;
 

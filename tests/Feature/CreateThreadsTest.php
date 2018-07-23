@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -10,25 +11,45 @@ class CreateThreadsTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function an_authenticated_user_may_create_new_forum_threads()
+    public function setUp()
     {
-        $thread = make('thread');
+        parent::setUp();
+    }
 
+    /** @test */
+    public function auth_can_create_thread()
+    {
         $this->signIn();
 
-        $this->post(route('threads.store'), $thread->only(['title', 'body']));
+        $this->get(route('threads.create'))
+            ->assertOk();
+    }
 
-        $this->get('/threads/1')
+    /** @test */
+    public function guest_can_not_create()
+    {
+        $this->get(route('threads.create'))
+            ->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function auth_can_store_thread()
+    {
+        $this->signIn();
+
+        $this->post(route('threads.store'), raw('thread'));
+
+        $thread = Thread::first();
+
+        $this->get($thread->url())
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }
 
     /** @test */
-    public function guest_may_not_create_new_forum_threads()
+    public function guest_can_not_store_thread()
     {
-        $this->expectException('Illuminate\Auth\AuthenticationException');
-
-        $this->post(route('threads.store'), make('thread')->only(['title', 'body']));
+        $this->post(route('threads.store'), raw('thread'))
+            ->assertRedirect(route('login'));
     }
 }

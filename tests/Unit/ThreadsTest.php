@@ -35,6 +35,12 @@ class ThreadsTest extends TestCase
     }
 
     /** @test */
+    public function it_has_a_url()
+    {
+        $this->assertSame(route('threads.show', $this->thread->id), $this->thread->url());
+    }
+
+    /** @test */
     public function it_has_a_creator()
     {
         $this->assertInstanceOf('App\User', $this->thread->creator);

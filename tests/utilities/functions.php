@@ -11,6 +11,11 @@ function make($entity, array $attributes = [])
     return factory(getEntityClass($entity))->make($attributes);
 }
 
+function raw($entity, array $attributes = [])
+{
+    return factory(getEntityClass($entity))->raw($attributes);
+}
+
 function getEntityClass(string $entity)
 {
     $entities = [
