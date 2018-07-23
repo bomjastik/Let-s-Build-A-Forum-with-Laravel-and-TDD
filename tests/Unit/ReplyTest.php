@@ -11,27 +11,32 @@ class ReplyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $reply;
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->reply = factory(Reply::class)->create([
+            'body' => 'Test body'
+        ]);
+    }
+
     /** @test */
     public function it_has_a_body()
     {
-        $reply = factory(Reply::class)->create(['body' => 'Test body']);
-
-        $this->assertSame('Test body', $reply->body);
+        $this->assertSame('Test body', $this->reply->body);
     }
 
     /** @test */
     public function it_has_an_owner()
     {
-        $reply = factory(Reply::class)->create();
-
-        $this->assertInstanceOf('App\User', $reply->owner);
+        $this->assertInstanceOf('App\User', $this->reply->owner);
     }
 
     /** @test */
     public function it_belongs_to_a_thread()
     {
-        $reply = factory(Reply::class)->create();
-
-        $this->assertInstanceOf('App\Thread', $reply->thread);
+        $this->assertInstanceOf('App\Thread', $this->reply->thread);
     }
 }

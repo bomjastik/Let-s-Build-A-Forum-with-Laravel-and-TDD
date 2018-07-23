@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Reply;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -12,15 +11,24 @@ class UsersTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_has_replies()
+    private $user;
+
+    public function setUp()
     {
-        $user = factory(User::class)->create();
+        parent::setUp();
 
-        $replies = factory(Reply::class, 3)->create([
-            'user_id' => $user->id
-        ]);
+        $this->user = factory(User::class)->create();
+    }
 
-        $this->assertCount(3, $replies);
+    /** @test */
+    public function it_can_own_replies()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->user->replies);
+    }
+
+    /** @test */
+    public function it_can_own_threads()
+    {
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->user->threads);
     }
 }

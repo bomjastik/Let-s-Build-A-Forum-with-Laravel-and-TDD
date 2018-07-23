@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Reply;
 use App\Thread;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -37,18 +36,25 @@ class ThreadsTest extends TestCase
     }
 
     /** @test */
+    public function it_has_a_creator()
+    {
+        $this->assertInstanceOf('App\User', $this->thread->creator);
+    }
+
+    /** @test */
     public function it_can_has_replies()
     {
-        $this->thread->replies()->saveMany(
-            factory(Reply::class, 2)->make()
-        );
+        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->thread->replies);
+    }
+    
+    /** @test */
+    public function it_can_add_a_reply()
+    {
+        $this->thread->replies()->create([
+            'body' => 'Foobar',
+            'user_id' => 1
+        ]);
 
-        $this->assertCount(2, $this->thread->replies);
-
-        $this->thread->replies()->save(
-            factory(Reply::class)->make()
-        );
-
-        $this->assertCount(3, $this->thread->fresh()->replies);
+        $this->assertCount(1, $this->thread->replies);
     }
 }
