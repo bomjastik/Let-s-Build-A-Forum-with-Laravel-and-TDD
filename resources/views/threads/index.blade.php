@@ -9,7 +9,7 @@
 
                 <div class="card mb-3">
                     <div class="card-header">
-                        <a href="{{ route('threads.show', $thread->id) }}">
+                        <a href="{{ $thread->url() }}">
                             {{ $thread->title }}
                         </a>
                     </div>

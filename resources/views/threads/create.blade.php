@@ -25,11 +25,30 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="channel">Channel:</label>
+                                <select class="form-control" name="channel_id" id="channel">
+                                    <option value="">Select Channel</option>
+                                    @if ($channels->isNotEmpty())
+                                        @foreach($channels as $channel)
+                                            <option value="{{ $channel->id }}">
+                                                {{ $channel->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @if ($errors->has('channel'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('channel') }}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="form-group">
                                 <label for="body">Body:</label>
                                 <textarea name="body" id="body" rows="3"
                                           class="form-control @if ($errors->has('body')) is-invalid @endif">
-                            {{ old('body') }}
-                        </textarea>
+                                    {{ old('body') }}
+                                </textarea>
                                 @if ($errors->has('body'))
                                     <div class="invalid-feedback">
                                         {{ $errors->first('body') }}

@@ -22,6 +22,7 @@ function getEntityClass(string $entity)
         'thread' => 'App\Thread',
         'reply' => 'App\Reply',
         'user' => 'App\User',
+        'channel' => 'App\Channel',
     ];
 
     return isset($entities[$entity]) ? $entities[$entity] : $entity;

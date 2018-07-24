@@ -18,13 +18,13 @@ class CreateThreadTest extends DuskTestCase
     public function auth_can_create_thread()
     {
         $this->browse(function (Browser $browser) {
-            $browser->resize(1920, 1080);
-
+            $channel = create('channel');
             $newThread = make('thread');
 
             $browser->loginAs(create('user'))
                 ->visit(route('threads.create'))
                 ->type('#title', $newThread->title)
+                ->select('#channel', $channel->id)
                 ->type('#body', $newThread->body)
                 ->press('#submit');
 
@@ -43,8 +43,6 @@ class CreateThreadTest extends DuskTestCase
     public function guest_can_not_create_thread()
     {
         $this->browse(function (Browser $browser) {
-            $browser->resize(1920, 1080);
-
             $browser->visit(route('threads.create'))
                 ->assertRouteIs('login');
         });

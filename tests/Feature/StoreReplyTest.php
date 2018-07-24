@@ -3,9 +3,8 @@
 namespace Tests\Feature;
 
 use App\Reply;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class StoreReplyTest extends TestCase
 {
@@ -18,7 +17,7 @@ class StoreReplyTest extends TestCase
 
         $this->signIn();
 
-        $this->post(route('threads.replies.store', $thread->id), raw('reply'));
+        $this->post(route('threads.replies.store', $thread->slug), raw('reply'));
 
         $reply = Reply::first();
 
@@ -29,7 +28,7 @@ class StoreReplyTest extends TestCase
     /** @test */
     public function guest_can_not_store_reply()
     {
-        $this->post(route('threads.replies.store', create('thread')->id), [])
+        $this->post(route('threads.replies.store', 'some-thread'), [])
             ->assertRedirect(route('login'));;
     }
 

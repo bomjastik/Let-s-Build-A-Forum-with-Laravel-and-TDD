@@ -3,18 +3,12 @@
 namespace Tests\Feature;
 
 use App\Thread;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CreateThreadsTest extends TestCase
 {
     use RefreshDatabase;
-
-    public function setUp()
-    {
-        parent::setUp();
-    }
 
     /** @test */
     public function auth_can_create_thread()
@@ -23,19 +17,6 @@ class CreateThreadsTest extends TestCase
 
         $this->get(route('threads.create'))
             ->assertOk();
-    }
-
-    /** @test */
-    public function guest_can_not_create()
-    {
-        $this->get(route('threads.create'))
-            ->assertRedirect(route('login'));
-    }
-
-    /** @test */
-    public function auth_can_store_thread()
-    {
-        $this->signIn();
 
         $this->post(route('threads.store'), raw('thread'));
 
@@ -47,8 +28,11 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    public function guest_can_not_store_thread()
+    public function guest_can_not_create_thread()
     {
+        $this->get(route('threads.create'))
+            ->assertRedirect(route('login'));
+
         $this->post(route('threads.store'), raw('thread'))
             ->assertRedirect(route('login'));
     }

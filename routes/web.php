@@ -12,10 +12,12 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('threads');
 });
 
-Route::resource('threads', 'ThreadController');
+Route::get('threads/{channel}/{thread}', 'ThreadController@show')->name('threads.show');
+Route::resource('threads', 'ThreadController', ['except' => 'show']);
+
 Route::resource('threads.replies', 'ReplyController', ['only' => ['store']]);
 
 Auth::routes();

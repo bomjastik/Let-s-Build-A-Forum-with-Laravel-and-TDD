@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Reply;
 use App\Thread;
 use Illuminate\Http\Request;
 
@@ -17,9 +16,9 @@ class ReplyController extends Controller
     {
         $thread->replies()->create([
             'body' => $request->body,
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
         ]);
 
-        return back();
+        return redirect($thread->url());
     }
 }

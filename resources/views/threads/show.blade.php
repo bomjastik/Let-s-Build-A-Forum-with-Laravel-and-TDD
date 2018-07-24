@@ -37,12 +37,13 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 @auth()
-                    <form method="post" action="{{ route('threads.replies.store', $thread->id) }}" dusk="reply-form">
-                        {{ csrf_field() }}
+                    <form method="POST" action="{{ route('threads.replies.store', $thread->slug) }}" id="reply-form">
+                        @csrf
 
                         <div class="form-group">
-                            <textarea class="form-control @if ($errors->has('body')) is-invalid @endif" name="body"
-                                      id="body" rows="3" placeholder="Have something to say?" dusk="reply-body">
+                            <label for="body">Body:</label>
+                            <textarea name="body" id="body" rows="3" placeholder="Have something to say?"
+                                      class="form-control @if ($errors->has('body')) is-invalid @endif">
                                 {{ old('body') }}
                             </textarea>
                             @if ($errors->has('body'))
@@ -52,12 +53,12 @@
                             @endif
                         </div>
 
-                        <button class="btn btn-primary" type="submit" dusk="add-reply">Add reply</button>
+                        <button type="submit" class="btn btn-primary" id="submit">Submit</button>
                     </form>
                 @endauth
 
                 @guest()
-                    <div class="alert alert-light text-center" role="alert" dusk="login-alert">
+                    <div class="alert alert-light text-center" role="alert" id="login-alert">
                         Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion.
                     </div>
                 @endguest

@@ -2,37 +2,24 @@
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
 class CreateReplyTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
-    private $thread;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->thread = create('thread');
-    }
-
     /**
      * @test
      * @throws \Throwable
      */
-    public function auth_can_see_a_reply_form()
+    public function guest_can_not_create_reply()
     {
-        $thread = $this->thread;
-
-        $this->browse(function (Browser $browser) use ($thread) {
-            $browser->resize(1920, 1080);
-
-            $browser->loginAs(create('user'))
-                ->visit($thread->url())
-                ->assertVisible('@reply-form');
+        $this->browse(function (Browser $browser) {
+            $browser->visit(create('thread')->url())
+                ->assertMissing('#reply-form')
+                ->assertVisible('#login-alert');
         });
     }
 
@@ -40,34 +27,14 @@ class CreateReplyTest extends DuskTestCase
      * @test
      * @throws \Throwable
      */
-    public function guest_can_not_see_a_reply_form()
+    public function auth_can_create_reply()
     {
-        $thread = $this->thread;
-
-        $this->browse(function (Browser $browser) use ($thread) {
-            $browser->resize(1920, 1080);
-
-            $browser->visit($thread->url())
-                ->assertMissing('@reply-form')
-                ->assertVisible('@login-alert');
-        });
-    }
-
-    /**
-     * @test
-     * @throws \Throwable
-     */
-    public function auth_can_submit_a_new_reply()
-    {
-        $thread = $this->thread;
-
-        $this->browse(function (Browser $browser) use ($thread) {
-            $browser->resize(1920, 1080);
-
+        $this->browse(function (Browser $browser) {
             $browser->loginAs(create('user'))
-                ->visit($thread->url())
-                ->type('@reply-body', 'Test reply')
-                ->press('@add-reply')
+                ->visit(create('thread')->url())
+                ->assertVisible('#reply-form')
+                ->type('#body', 'Test reply')
+                ->press('#submit')
                 ->assertSee('Test reply');
         });
     }

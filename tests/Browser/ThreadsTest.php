@@ -2,22 +2,13 @@
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
-use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
 class ThreadsTest extends DuskTestCase
 {
     use DatabaseMigrations;
-
-    private $thread;
-
-    public function setUp()
-    {
-        parent::setUp();
-
-        $this->thread = create('thread');
-    }
 
     /**
      * @test
@@ -25,10 +16,8 @@ class ThreadsTest extends DuskTestCase
      */
     public function user_can_see_threads()
     {
-        $thread = $this->thread;
-
-        $this->browse(function (Browser $browser) use ($thread) {
-            $browser->resize(1920, 1080);
+        $this->browse(function (Browser $browser) {
+            $thread = create('thread');
 
             $browser->visit('threads')
                 ->assertSee($thread->title);
@@ -39,12 +28,11 @@ class ThreadsTest extends DuskTestCase
      * @test
      * @throws \Throwable
      */
-    public function user_can_see_thread()
+    public function user_can_visit_thread()
     {
-        $thread = $this->thread;
+        $this->browse(function (Browser $browser) {
 
-        $this->browse(function (Browser $browser) use ($thread) {
-            $browser->resize(1920, 1080);
+            $thread = create('thread');
 
             $browser->visit('threads')
                 ->assertSeeLink($thread->title)

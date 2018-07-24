@@ -2,11 +2,10 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-class ThreadsTest extends TestCase
+class ThreadTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,7 +17,8 @@ class ThreadsTest extends TestCase
 
         $this->thread = create('thread', [
             'title' => 'Test title',
-            'body' => 'Test body'
+            'slug' => str_slug('Test title'),
+            'body' => 'Test body',
         ]);
     }
 
@@ -35,9 +35,15 @@ class ThreadsTest extends TestCase
     }
 
     /** @test */
+    public function it_has_a_slug()
+    {
+        $this->assertSame(str_slug('Test title'), $this->thread->slug);
+    }
+
+    /** @test */
     public function it_has_a_url()
     {
-        $this->assertSame(route('threads.show', $this->thread->id), $this->thread->url());
+        $this->assertSame(url("/threads/{$this->thread->channel->slug}/{$this->thread->slug}"), $this->thread->url());
     }
 
     /** @test */
@@ -57,9 +63,15 @@ class ThreadsTest extends TestCase
     {
         $this->thread->replies()->create([
             'body' => 'Foobar',
-            'user_id' => 1
+            'user_id' => 1,
         ]);
 
         $this->assertCount(1, $this->thread->replies);
+    }
+
+    /** @test */
+    public function it_can_belong_to_chanel()
+    {
+        $this->assertInstanceOf('App\Channel', $this->thread->channel);
     }
 }
