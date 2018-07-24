@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreReplyRequest;
 use App\Thread;
-use Illuminate\Http\Request;
 
 class ReplyController extends Controller
 {
@@ -12,7 +12,7 @@ class ReplyController extends Controller
         $this->middleware('auth');
     }
 
-    public function store(Thread $thread, Request $request)
+    public function store(Thread $thread, StoreReplyRequest $request)
     {
         $thread->replies()->create([
             'body' => $request->body,

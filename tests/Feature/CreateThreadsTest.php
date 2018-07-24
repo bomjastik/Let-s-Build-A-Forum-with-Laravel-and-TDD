@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Thread;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,11 +17,11 @@ class CreateThreadsTest extends TestCase
         $this->get(route('threads.create'))
             ->assertOk();
 
-        $this->post(route('threads.store'), raw('thread'));
+        $thread = make('thread');
 
-        $thread = Thread::first();
+        $response = $this->post(route('threads.store'), $thread->toArray());
 
-        $this->get($thread->url())
+        $this->get($response->headers->get('location'))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }
@@ -35,5 +34,41 @@ class CreateThreadsTest extends TestCase
 
         $this->post(route('threads.store'), raw('thread'))
             ->assertRedirect(route('login'));
+    }
+
+    /** @test */
+    public function it_requires_title()
+    {
+        $this->publishThread(['title' => null])
+            ->assertSessionHasErrors(['title']);
+    }
+
+    /** @test */
+    public function it_requires_body()
+    {
+        $this->publishThread(['body' => null])
+            ->assertSessionHasErrors(['body']);
+    }
+
+    /** @test */
+    public function it_requires_existing_channel()
+    {
+        $this->publishThread(['channel_id' => null])
+            ->assertSessionHasErrors(['channel_id']);
+
+        $this->publishThread(['channel_id' => 9999])
+            ->assertSessionHasErrors(['channel_id']);
+
+        $this->publishThread(['channel_id' => create('channel')->id])
+            ->assertSessionHasNoErrors();
+    }
+
+    private function publishThread(array $attributes = [])
+    {
+        $this->signIn();
+
+        $thread = make('thread', $attributes);
+
+        return $this->post(route('threads.store'), $thread->toArray());
     }
 }

@@ -25,8 +25,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="channel">Channel:</label>
-                                <select class="form-control" name="channel_id" id="channel">
+                                <label for="channel_id">Channel:</label>
+                                <select name="channel_id" id="channel_id"
+                                        class="form-control @if ($errors->has('channel_id')) is-invalid @endif">
                                     <option value="">Select Channel</option>
                                     @if ($channels->isNotEmpty())
                                         @foreach($channels as $channel)
@@ -36,9 +37,9 @@
                                         @endforeach
                                     @endif
                                 </select>
-                                @if ($errors->has('channel'))
+                                @if ($errors->has('channel_id'))
                                     <div class="invalid-feedback">
-                                        {{ $errors->first('channel') }}
+                                        {{ $errors->first('channel_id') }}
                                     </div>
                                 @endif
                             </div>

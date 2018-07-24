@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Reply;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,15 +12,14 @@ class StoreReplyTest extends TestCase
     /** @test */
     public function auth_can_store_reply()
     {
-        $thread = create('thread');
-
         $this->signIn();
 
-        $this->post(route('threads.replies.store', $thread->slug), raw('reply'));
+        $thread = create('thread');
+        $reply = make('reply');
 
-        $reply = Reply::first();
+        $response = $this->post(route('threads.replies.store', $thread->slug), $reply->toArray());
 
-        $this->get($thread->url())
+        $this->get($response->headers->get('location'))
             ->assertSee($reply->body);
     }
 
@@ -32,4 +30,14 @@ class StoreReplyTest extends TestCase
             ->assertRedirect(route('login'));;
     }
 
+    /** @test */
+    public function it_requires_body()
+    {
+        $this->signIn();
+
+        $thread = create('thread');
+
+        $this->post(route('threads.replies.store', $thread->slug), ['body' => null])
+            ->assertSessionHasErrors(['body']);
+    }
 }
