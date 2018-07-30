@@ -31,4 +31,18 @@ class ThreadsTest extends TestCase
         $this->get($this->thread->url)
             ->assertSee($this->thread->title);
     }
+
+    /** @test */
+    public function a_user_can_filter_threads_by_any_username()
+    {
+        $this->signIn(create('user', ['name' => 'JohnDoe']));
+
+        $threadByJohn = create('thread', ['user_id' => auth()->id()]);
+
+        $threadNotByJohn = create('thread');
+
+        $this->get(route('threads.index') . '?by=JohnDoe')
+            ->assertSee($threadByJohn->title)
+            ->assertDontSee($threadNotByJohn->title);
+    }
 }
