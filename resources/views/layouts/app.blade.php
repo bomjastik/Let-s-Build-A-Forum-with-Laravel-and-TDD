@@ -52,11 +52,13 @@
                             Channels
                         </a>
                         <div class="dropdown-menu" aria-labelledby="channels">
-                            @foreach(\App\Channel::all() as $channel)
-                                <a class="dropdown-item" href="{{ $channel->url }}">
-                                    {{ $channel->name }}
-                                </a>
-                            @endforeach
+                            @if ($channels->isNotEmpty())
+                                @foreach($channels as $channel)
+                                    <a class="dropdown-item" href="{{ $channel->url }}">
+                                        {{ $channel->name }}
+                                    </a>
+                                @endforeach
+                            @endif
                         </div>
                     </li>
                 </ul>

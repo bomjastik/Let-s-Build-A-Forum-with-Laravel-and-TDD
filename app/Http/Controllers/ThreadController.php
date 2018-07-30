@@ -33,8 +33,7 @@ class ThreadController extends Controller
      */
     public function create()
     {
-        return view('threads.create')
-            ->withChannels(Channel::all());
+        return view('threads.create');
     }
 
     /**
