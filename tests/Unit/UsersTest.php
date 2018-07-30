@@ -22,12 +22,16 @@ class UsersTest extends TestCase
     /** @test */
     public function it_can_own_replies()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->user->replies);
+        $reply = create('reply', ['user_id' => $this->user->id]);
+
+        $this->assertTrue($this->user->replies->contains($reply));
     }
 
     /** @test */
     public function it_can_own_threads()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->user->threads);
+        $thread = create('thread', ['user_id' => $this->user->id]);
+
+        $this->assertTrue($this->user->threads->contains($thread));
     }
 }

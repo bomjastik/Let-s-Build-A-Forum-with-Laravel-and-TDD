@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class CreateThreadsTest extends TestCase
+class CreateThreadTest extends TestCase
 {
     use RefreshDatabase;
 

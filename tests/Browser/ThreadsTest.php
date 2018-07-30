@@ -37,7 +37,7 @@ class ThreadsTest extends DuskTestCase
             $browser->visit('threads')
                 ->assertSeeLink($thread->title)
                 ->clickLink($thread->title)
-                ->assertUrlIs($thread->url())
+                ->assertUrlIs($thread->url)
                 ->assertSee($thread->title)
                 ->assertSee($thread->body);
         });

@@ -43,35 +43,42 @@ class ThreadTest extends TestCase
     /** @test */
     public function it_has_a_url()
     {
-        $this->assertSame(url("/threads/{$this->thread->channel->slug}/{$this->thread->slug}"), $this->thread->url());
+        $this->assertSame(url("/threads/{$this->thread->channel->slug}/{$this->thread->slug}"), $this->thread->url);
     }
 
     /** @test */
     public function it_has_a_creator()
     {
-        $this->assertInstanceOf('App\User', $this->thread->creator);
+        $user = create('user');
+
+        $thread = create('thread', ['user_id' => $user->id]);
+
+        $this->assertTrue($user->threads->contains($thread));
     }
 
     /** @test */
     public function it_can_has_replies()
     {
-        $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $this->thread->replies);
+        $reply = create('reply', ['thread_id' => $this->thread->id]);
+
+        $this->assertTrue($this->thread->replies->contains($reply));
     }
 
     /** @test */
     public function it_can_add_a_reply()
     {
-        $this->thread->replies()->create([
-            'body' => 'Foobar',
-            'user_id' => 1,
-        ]);
+        $reply = $this->thread->replies()->create(raw('reply'));
 
-        $this->assertCount(1, $this->thread->replies);
+        $this->assertSame($this->thread->replies->first()->id, $reply->id);
     }
 
     /** @test */
     public function it_can_belong_to_chanel()
     {
-        $this->assertInstanceOf('App\Channel', $this->thread->channel);
+        $channel = create('channel');
+
+        $channel->threads()->save($this->thread);
+
+        $this->assertTrue($channel->threads->contains($this->thread));
     }
 }

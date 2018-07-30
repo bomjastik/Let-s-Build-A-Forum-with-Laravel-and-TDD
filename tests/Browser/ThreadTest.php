@@ -20,7 +20,7 @@ class ThreadTest extends DuskTestCase
             $thread = create('thread');
             $reply = create('reply', ['thread_id' => $thread->id]);
 
-            $browser->visit($thread->url())
+            $browser->visit($thread->url)
                 ->assertSee($thread->title)
                 ->assertSee($thread->body)
                 ->assertSee($reply->body);

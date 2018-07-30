@@ -5,32 +5,47 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Http\Requests\StoreThreadRequest;
 use App\Thread;
-use Illuminate\Http\Request;
 
 class ThreadController extends Controller
 {
-    public function __construct()
+    /**
+     * Display a listing of the threads.
+     *
+     * @param Channel|null $channel
+     * @return mixed
+     */
+    public function index(Channel $channel = null)
     {
-        $this->middleware('auth')->except(['index', 'show']);
+        $threads = Thread::with('channel')->latest();
+
+        if ($channel) {
+            $threads->whereChannelId($channel->id);
+        }
+
+        return view('threads.index')
+            ->withThreads($threads->paginate(10));
     }
 
-    public function index()
-    {
-        $threads = Thread::with('channel')->latest()->paginate(10);
-
-        return view('threads.index', compact('threads'));
-    }
-
+    /**
+     * Show the form for creating a new thread.
+     *
+     * @return mixed
+     */
     public function create()
     {
-        $channels = Channel::all();
-
-        return view('threads.create', compact('channels'));
+        return view('threads.create')
+            ->withChannels(Channel::all());
     }
 
+    /**
+     * Store a newly created thread.
+     *
+     * @param StoreThreadRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function store(StoreThreadRequest $request)
     {
-        $thread = Thread::create([
+        $thread = new Thread([
             'user_id' => auth()->id(),
             'channel_id' => $request->channel_id,
             'title' => $request->title,
@@ -38,45 +53,20 @@ class ThreadController extends Controller
             'body' => $request->body,
         ]);
 
+        $thread->save();
+
         return redirect($thread->url());
     }
 
+    /**
+     * Display the specified thread.
+     *
+     * @param Channel $channel
+     * @param Thread $thread
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show(Channel $channel, Thread $thread)
     {
         return view('threads.show', compact('thread', 'channel'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Thread $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Thread $thread)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Thread $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Thread $thread)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Thread $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Thread $thread)
-    {
-        //
     }
 }

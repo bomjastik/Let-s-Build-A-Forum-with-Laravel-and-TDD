@@ -17,7 +17,7 @@ class CreateReplyTest extends DuskTestCase
     public function guest_can_not_create_reply()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(create('thread')->url())
+            $browser->visit(create('thread')->url)
                 ->assertMissing('#reply-form')
                 ->assertVisible('#login-alert');
         });
@@ -31,7 +31,7 @@ class CreateReplyTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->loginAs(create('user'))
-                ->visit(create('thread')->url())
+                ->visit(create('thread')->url)
                 ->assertVisible('#reply-form')
                 ->type('#body', 'Test reply')
                 ->press('#submit')

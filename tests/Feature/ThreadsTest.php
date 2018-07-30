@@ -28,7 +28,7 @@ class ThreadsTest extends TestCase
     /** @test */
     public function it_can_return_a_specific_thread()
     {
-        $this->get($this->thread->url())
+        $this->get($this->thread->url)
             ->assertSee($this->thread->title);
     }
 }

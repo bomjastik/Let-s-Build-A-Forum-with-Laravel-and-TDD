@@ -24,13 +24,13 @@ class CreateThreadTest extends DuskTestCase
             $browser->loginAs(create('user'))
                 ->visit(route('threads.create'))
                 ->type('#title', $newThread->title)
-                ->select('#channel', $channel->id)
+                ->select('#channel_id', $channel->id)
                 ->type('#body', $newThread->body)
                 ->press('#submit');
 
             $thread = Thread::first();
 
-            $browser->assertUrlIs($thread->url())
+            $browser->assertUrlIs($thread->url)
                 ->assertSee($thread->title)
                 ->assertSee($thread->body);
         });

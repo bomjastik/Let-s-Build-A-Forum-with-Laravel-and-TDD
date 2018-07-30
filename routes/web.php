@@ -15,11 +15,15 @@ Route::get('/', function () {
     return redirect('threads');
 });
 
-Route::get('threads/{channel}/{thread}', 'ThreadController@show')->name('threads.show');
-Route::resource('threads', 'ThreadController', ['except' => 'show']);
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('threads.replies', 'ReplyController', ['only' => ['store']]);
+    Route::resource('threads', 'ThreadController', ['only' => ['create', 'store']]);
+
+    Route::resource('threads.replies', 'ReplyController', ['only' => ['store']]);
+});
+
+Route::get('threads/{channel?}', 'ThreadController@index')->name('threads.index');
+Route::get('threads/{channel}/{thread}', 'ThreadController@show')->name('threads.show');
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
