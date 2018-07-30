@@ -50,7 +50,7 @@ class ThreadController extends Controller
             'channel_id' => $request->channel_id,
             'title' => $request->title,
             'slug' => str_slug($request->title),
-            'body' => $request->body,
+            'body' => trim($request->body),
         ]);
 
         $thread->save();
