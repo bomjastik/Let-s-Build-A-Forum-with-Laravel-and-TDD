@@ -6,18 +6,72 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title', 'slug', 'body', 'user_id', 'channel_id',
+    ];
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /**
+     * Get the replies for the thread.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function replies()
     {
         return $this->hasMany(Reply::class);
     }
 
+    /**
+     * Get the creator of the thread.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function url()
+    /**
+     * Get the channel for the thread.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function channel()
     {
-        return route('threads.show', $this->id);
+        return $this->belongsTo(Channel::class);
+    }
+
+    /**
+     * Get thread url.
+     *
+     * @return string
+     */
+    public function url(): string
+    {
+        return route('threads.show', [$this->channel->slug, $this->slug]);
+    }
+
+    /**
+     * Get thread url.
+     *
+     * @return string
+     */
+    public function getUrlAttribute(): string
+    {
+        return route('threads.show', [$this->channel->slug, $this->slug]);
     }
 }
