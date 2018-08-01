@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Filters\ThreadFilters;
 use App\Http\Requests\StoreThreadRequest;
 use App\Thread;
 use App\User;
@@ -13,21 +14,18 @@ class ThreadController extends Controller
     /**
      * Display a listing of the threads.
      *
-     * @param Channel|null $channel
+     * @param Channel $channel
+     * @param ThreadFilters $filters
      * @return mixed
      */
-    public function index(Channel $channel = null)
+    public function index(Channel $channel, ThreadFilters $filters)
     {
-        $threads = Thread::with('channel', 'creator')->latest();
+        $threads = Thread::with('channel', 'creator')
+            ->filter($filters)
+            ->latest();
 
-        if ($channel) {
+        if ($channel->exists) {
             $threads->whereChannelId($channel->id);
-        }
-
-        if ($username = request('by')) {
-            $user = User::where('name', $username)->firstOrFail();
-
-            $threads->whereUserId($user->id);
         }
 
         return view('threads.index')

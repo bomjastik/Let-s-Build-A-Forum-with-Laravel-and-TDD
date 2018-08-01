@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Filters\ThreadFilters;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
@@ -73,5 +75,17 @@ class Thread extends Model
     public function getUrlAttribute(): string
     {
         return route('threads.show', [$this->channel->slug, $this->slug]);
+    }
+
+    /**
+     * Scope a query to filter threads.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Filters\ThreadFilters $filters
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilter(Builder $query, ThreadFilters $filters)
+    {
+        return $filters->apply($query);
     }
 }
