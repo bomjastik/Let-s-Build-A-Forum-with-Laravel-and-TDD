@@ -16,6 +16,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-TXfwrfuHVznxCssTxWoPZjhcss/hp38gEOH8UPZG/JcXonvBQ6SlsIF49wUzsGno" crossorigin="anonymous">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -46,10 +48,15 @@
                                 All Threads
                             </a>
                             @auth()
-                            <a class="dropdown-item" href="{{ route('threads.index') . '?by='. auth()->user()->name }}">
-                                My Threads
-                            </a>
+                                <a class="dropdown-item"
+                                   href="{{ route('threads.index') . '?by='. auth()->user()->name }}">
+                                    My Threads
+                                </a>
                             @endauth
+                            <a class="dropdown-item"
+                               href="{{ route('threads.index') . '?popular=1' }}">
+                                Popular All Time
+                            </a>
                         </div>
                     </li>
 
