@@ -16,7 +16,7 @@
                     <form method="POST" action="{{ route('replies.favorites', $reply->id) }}">
                         @csrf
 
-                        <button type="submit" class="btn btn-link" id="submit">
+                        <button type="submit" class="btn btn-link">
                             @if ($reply->isFavorited())
                                 <strong><i class="fas fa-thumbs-up"></i></strong>
                             @else

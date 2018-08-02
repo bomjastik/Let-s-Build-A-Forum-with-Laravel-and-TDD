@@ -18,18 +18,18 @@ class Thread extends Model
     ];
 
     /**
-     * The "booting" method of the model.
+     * The relations to eager load on every query.
      *
-     * @return void
+     * @var array
      */
-    protected static function boot()
-    {
-        parent::boot();
+    protected $with = ['creator', 'channel'];
 
-        static::addGlobalScope('replyCount', function($builder) {
-            $builder->withCount('replies');
-        });
-    }
+    /**
+     * The relationship counts that should be eager loaded on every query.
+     *
+     * @var array
+     */
+    protected $withCount = ['replies'];
 
     /**
      * Get the route key for the model.
@@ -48,9 +48,7 @@ class Thread extends Model
      */
     public function replies()
     {
-        return $this->hasMany(Reply::class)
-            ->withCount('favorites')
-            ->with('owner');
+        return $this->hasMany(Reply::class);
     }
 
     /**

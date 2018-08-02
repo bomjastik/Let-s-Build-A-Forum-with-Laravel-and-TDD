@@ -53,7 +53,7 @@
                                 @endif
                             </div>
 
-                            <button type="submit" class="btn btn-primary" id="submit">Post</button>
+                            <button type="submit" class="btn btn-primary" id="submitReply">Post</button>
                         </form>
                     @endauth
 

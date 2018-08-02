@@ -6,8 +6,6 @@ use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Http\Requests\StoreThreadRequest;
 use App\Thread;
-use App\User;
-use Illuminate\Http\Request;
 
 class ThreadController extends Controller
 {
@@ -85,8 +83,7 @@ class ThreadController extends Controller
      */
     protected function getThreads(Channel $channel, ThreadFilters $filters)
     {
-        $threads = Thread::with('channel')
-            ->latest()
+        $threads = Thread::latest()
             ->filter($filters);
 
         if ($channel->exists) {
