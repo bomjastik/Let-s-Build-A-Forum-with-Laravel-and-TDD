@@ -28,13 +28,23 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'name';
+    }
+
+    /**
      * Get the user threads.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function threads()
     {
-        return $this->hasMany(Thread::class);
+        return $this->hasMany(Thread::class)->latest();
     }
 
     /**
@@ -45,5 +55,15 @@ class User extends Authenticatable
     public function replies()
     {
         return $this->hasMany(Reply::class);
+    }
+
+    /**
+     * Get profile link for the user.
+     *
+     * @return string
+     */
+    public function getProfileLinkAttribute(): string
+    {
+        return route('profile.show', $this->name);
     }
 }

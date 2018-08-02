@@ -23,6 +23,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('threads.replies', 'ReplyController', ['only' => ['store']]);
 
     Route::post('replies/{reply}/favorites', 'FavoriteController@store')->name('replies.favorites');
+
+    Route::get('profiles/{user}', 'ProfileController@show')->name('profile.show');
 });
 
 Route::get('threads/{channel?}', 'ThreadController@index')->name('threads.index');

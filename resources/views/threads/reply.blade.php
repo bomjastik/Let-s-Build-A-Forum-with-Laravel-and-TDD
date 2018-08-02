@@ -4,9 +4,7 @@
         <div class="row">
             <div class="col-auto mr-auto">
                 <small class="text-muted">
-                    <a href="">
-                        {{ $reply->owner->name }}
-                    </a>
+                    <a href="{{ $reply->owner->profileLink }}">{{ $reply->owner->name }}</a>
                     said
                     {{ $reply->created_at->diffForHumans() }}
                 </small>

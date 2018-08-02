@@ -16,9 +16,7 @@
 
                     <div class="card-footer">
                         <small class="text-muted">
-                            <a href="">
-                                {{ $thread->creator->name }}
-                            </a>
+                            <a href="{{ $thread->creator->profileLink }}">{{ $thread->creator->name }}</a>
                             posted
                             {{ $thread->created_at->diffForHumans() }}
                         </small>
