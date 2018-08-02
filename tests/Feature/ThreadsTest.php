@@ -46,7 +46,7 @@ class ThreadsTest extends TestCase
             ->assertSee($threadByJohn->title)
             ->assertDontSee($threadNotByJohn->title);
     }
-    
+
     /** @test */
     public function a_user_can_filter_threads_by_popularity()
     {
@@ -61,5 +61,36 @@ class ThreadsTest extends TestCase
         $response = $this->json('GET', 'threads?popular=1')->json();
 
         $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
+    }
+
+    /** @test */
+    public function a_thread_can_be_deleted()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        $thread = create('thread');
+
+        $response = $this->json('DELETE', route('threads.destroy', $thread->slug));
+
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+    }
+
+    /** @test */
+    public function quests_can_not_delete_threads()
+    {
+        $thread = create('thread');
+
+        $this->delete(route('threads.destroy', $thread->slug))
+            ->assertRedirect(route('login'));;
+    }
+    
+    /** @test */
+    public function thread_can_only_be_deleted_by_user_with_permission()
+    {
+        // @TODO
     }
 }

@@ -1,12 +1,12 @@
 <div class="card mb-3">
     <div class="card-header">
         <div class="row justify-content-between">
-            <div class="col-6">
+            <div class="col-auto mr-auto">
                 <a href="{{ $thread->url }}">
                     {{ $thread->title }}
                 </a>
             </div>
-            <div class="col-4 text-right">
+            <div class="col-auto">
                 <a href="{{ $thread->url }}"
                    title="{{ str_plural('reply', $thread->replies_count) }}">
                     <i class="fal fa-comments"></i> {{ $thread->replies_count }}
@@ -20,8 +20,28 @@
     </div>
 
     <div class="card-footer">
-        <a href="{{ $thread->creator->profileLink }}"><small>{{ $thread->creator->name }}</small></a>
 
-        <small>{{ $thread->created_at->diffForHumans() }}</small>
+        <div class="row justify-content-between">
+            <div class="col-auto mr-auto">
+                <a href="{{ $thread->creator->profileLink }}">
+                    <small>{{ $thread->creator->name }}</small>
+                </a>
+
+                <small>{{ $thread->created_at->diffForHumans() }}</small>
+            </div>
+            @if ($thread->isCreator())
+                <div class="col-auto">
+                    <form method="POST" action="{{ route('threads.destroy', $thread->slug) }}">
+                        @csrf
+                        {{ method_field('DELETE') }}
+
+                        <button type="submit" class="btn btn-danger" id="submit">
+                            <i class="fal fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            @endif
+        </div>
+
     </div>
 </div>

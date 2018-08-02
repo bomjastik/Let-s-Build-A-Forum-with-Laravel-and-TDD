@@ -27,7 +27,7 @@ class StoreReplyTest extends TestCase
     public function guest_can_not_store_reply()
     {
         $this->post(route('threads.replies.store', 'some-thread'), [])
-            ->assertRedirect(route('login'));;
+            ->assertRedirect(route('login'));
     }
 
     /** @test */

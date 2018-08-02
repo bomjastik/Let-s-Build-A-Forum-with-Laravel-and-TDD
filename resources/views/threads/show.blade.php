@@ -5,23 +5,7 @@
         <div class="row">
             <div class="col-md-8">
 
-                <div class="card mb-3">
-                    <div class="card-header">
-                        {{ $thread->title }}
-                    </div>
-
-                    <div class="card-body">
-                        {{ $thread->body }}
-                    </div>
-
-                    <div class="card-footer">
-                        <small class="text-muted">
-                            <a href="{{ $thread->creator->profileLink }}">{{ $thread->creator->name }}</a>
-                            posted
-                            {{ $thread->created_at->diffForHumans() }}
-                        </small>
-                    </div>
-                </div>
+                @include('threads.list_item')
 
                 @if ($replies && $replies->isNotEmpty())
                     @foreach($replies as $reply)
@@ -68,7 +52,7 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         This thread was published {{ $thread->created_at->diffForHumans() }}
-                        by <a href="#">{{ $thread->creator->name }}</a>,
+                        by <a href="{{ $thread->creator->profileLink }}">{{ $thread->creator->name }}</a>,
                         and currently
                         has {{ $thread->replies_count }} {{ str_plural('comment', $thread->replies_count) }}.
                     </div>

@@ -102,4 +102,15 @@ class Thread extends Model
     {
         return $filters->apply($query);
     }
+
+    /**
+     * Check if the given user is the creator of the thread.
+     *
+     * @param \App\User|null $user
+     * @return bool
+     */
+    public function isCreator(User $user = null): bool
+    {
+        return $this->user_id === ($user ? $user->id : auth()->id());
+    }
 }

@@ -6,6 +6,7 @@ use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Http\Requests\StoreThreadRequest;
 use App\Thread;
+use Illuminate\Support\Facades\Log;
 
 class ThreadController extends Controller
 {
@@ -72,6 +73,27 @@ class ThreadController extends Controller
             'thread' => $thread,
             'replies' => $thread->replies()->paginate(10),
         ]);
+    }
+
+    /**
+     * Remove the thread.
+     *
+     * @param \App\Thread $thread
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Thread $thread)
+    {
+        try {
+            $thread->delete();
+        } catch (\Exception $e) {
+            Log::error('Failed to delete the thread.');
+        }
+
+        if (request()->wantsJson()) {
+            return response([], 204);
+        }
+
+        return redirect(route('threads.index'));
     }
 
     /**
