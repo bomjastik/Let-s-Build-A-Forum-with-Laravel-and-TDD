@@ -23,7 +23,7 @@
                                 <i class="fal fa-thumbs-up"></i>
                             @endif
                             
-                            {{ $reply->favorites()->count() }}
+                            {{ $reply->favorites_count }}
                         </button>
                     </form>
                 </div>
