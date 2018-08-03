@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Filters\ThreadFilters;
 use App\Http\Requests\StoreThreadRequest;
-use App\Reply;
 use App\Thread;
 use Illuminate\Support\Facades\Log;
 
@@ -88,7 +87,6 @@ class ThreadController extends Controller
         $this->authorize('forceDelete', $thread);
 
         try {
-            $thread->replies()->delete();
             $thread->delete();
         } catch (\Exception $e) {
             Log::error('Failed to delete the thread.');

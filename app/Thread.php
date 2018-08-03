@@ -3,11 +3,14 @@
 namespace App;
 
 use App\Filters\ThreadFilters;
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
+    use RecordsActivity;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,6 +33,20 @@ class Thread extends Model
      * @var array
      */
     protected $withCount = ['replies'];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($thread) {
+            $thread->replies()->delete();
+        });
+    }
 
     /**
      * Get the route key for the model.
@@ -101,18 +118,5 @@ class Thread extends Model
     public function scopeFilter(Builder $query, ThreadFilters $filters)
     {
         return $filters->apply($query);
-    }
-
-    /**
-     * Check if the given user is the creator of the thread.
-     *
-     * @param \App\User|null $user
-     * @return bool
-     */
-    public function isCreator(User $user = null): bool
-    {
-        $creatorId = $user ? $user->id : auth()->id();
-
-        return $this->creator->id === $creatorId;
     }
 }

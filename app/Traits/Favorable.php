@@ -9,9 +9,8 @@ use App\Reply;
 
 trait Favorable
 {
-
     /**
-     * Get all of the reply's favorites
+     * Get all the model's favorites.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */

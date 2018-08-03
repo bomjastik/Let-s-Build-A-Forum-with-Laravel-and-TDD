@@ -3,11 +3,12 @@
 namespace App;
 
 use App\Traits\Favorable;
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Reply extends Model
 {
-    use Favorable;
+    use Favorable, RecordsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -49,5 +50,4 @@ class Reply extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
 }
