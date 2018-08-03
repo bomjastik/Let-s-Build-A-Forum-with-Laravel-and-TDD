@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
+use App\Thread;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -64,30 +66,39 @@ class ThreadsTest extends TestCase
     }
 
     /** @test */
-    public function a_thread_can_be_deleted()
+    public function authorized_users_thread_can_delete_threads()
     {
         $this->withoutExceptionHandling();
 
         $this->signIn();
 
-        $thread = create('thread');
+        $this->thread->update(['user_id' => auth()->id()]);
 
-        $response = $this->json('DELETE', route('threads.destroy', $thread->slug));
+        $reply = create('reply', ['thread_id' => $this->thread->id]);
 
-        $response->assertStatus(204);
+        $response = $this->delete(route('threads.destroy', $this->thread->slug));
 
-        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('threads', ['id' => $this->thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
+        $response->assertRedirect(route('threads.index'));
     }
 
     /** @test */
-    public function quests_can_not_delete_threads()
+    public function unauthorized_users_can_not_delete_threads()
     {
         $thread = create('thread');
 
         $this->delete(route('threads.destroy', $thread->slug))
-            ->assertRedirect(route('login'));;
+            ->assertRedirect(route('login'));
+
+        $this->signIn();
+
+        $this->delete(route('threads.destroy', $thread->slug))
+            ->assertStatus(403);
+
     }
-    
+
     /** @test */
     public function thread_can_only_be_deleted_by_user_with_permission()
     {

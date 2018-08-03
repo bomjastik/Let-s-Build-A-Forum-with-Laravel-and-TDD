@@ -111,6 +111,8 @@ class Thread extends Model
      */
     public function isCreator(User $user = null): bool
     {
-        return $this->user_id === ($user ? $user->id : auth()->id());
+        $creatorId = $user ? $user->id : auth()->id();
+
+        return $this->creator->id === $creatorId;
     }
 }

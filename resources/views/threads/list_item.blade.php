@@ -29,7 +29,8 @@
 
                 <small>{{ $thread->created_at->diffForHumans() }}</small>
             </div>
-            @if ($thread->isCreator())
+
+            @can('forceDelete', $thread)
                 <div class="col-auto">
                     <form method="POST" action="{{ route('threads.destroy', $thread->slug) }}">
                         @csrf
@@ -40,7 +41,8 @@
                         </button>
                     </form>
                 </div>
-            @endif
+            @endcan
+
         </div>
 
     </div>
