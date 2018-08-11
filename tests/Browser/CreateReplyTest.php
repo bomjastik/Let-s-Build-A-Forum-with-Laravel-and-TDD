@@ -34,7 +34,7 @@ class CreateReplyTest extends DuskTestCase
                 ->visit(create('thread')->url)
                 ->assertVisible('#reply-form')
                 ->type('#body', 'Test reply')
-                ->press('#submit')
+                ->press('#submitReply')
                 ->assertSee('Test reply');
         });
     }

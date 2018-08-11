@@ -1,19 +1,19 @@
 <?php
 
 
-function create($entity, array $attributes = [])
+function create($entity, array $attributes = [], $count = null)
 {
-    return factory(getEntityClass($entity))->create($attributes);
+    return factory(getEntityClass($entity), $count)->create($attributes);
 }
 
-function make($entity, array $attributes = [])
+function make($entity, array $attributes = [], $count = null)
 {
-    return factory(getEntityClass($entity))->make($attributes);
+    return factory(getEntityClass($entity), $count)->make($attributes);
 }
 
-function raw($entity, array $attributes = [])
+function raw($entity, array $attributes = [], $count = null)
 {
-    return factory(getEntityClass($entity))->raw($attributes);
+    return factory(getEntityClass($entity), $count)->raw($attributes);
 }
 
 function getEntityClass(string $entity)

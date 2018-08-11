@@ -3,31 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Channel;
+use App\Filters\ThreadFilters;
 use App\Http\Requests\StoreThreadRequest;
 use App\Thread;
-use App\User;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ThreadController extends Controller
 {
     /**
      * Display a listing of the threads.
      *
-     * @param Channel|null $channel
+     * @param Channel $channel
+     * @param ThreadFilters $filters
      * @return mixed
      */
-    public function index(Channel $channel = null)
+    public function index(Channel $channel, ThreadFilters $filters)
     {
-        $threads = Thread::with('channel', 'creator')->latest();
+        $threads = $this->getThreads($channel, $filters);
 
-        if ($channel) {
-            $threads->whereChannelId($channel->id);
-        }
-
-        if ($username = request('by')) {
-            $user = User::where('name', $username)->firstOrFail();
-
-            $threads->whereUserId($user->id);
+        if (request()->wantsJson()) {
+            return $threads->get();
         }
 
         return view('threads.index')
@@ -74,6 +69,48 @@ class ThreadController extends Controller
      */
     public function show(Channel $channel, Thread $thread)
     {
-        return view('threads.show', compact('thread', 'channel'));
+        return view('threads.show')->with([
+            'thread' => $thread,
+            'replies' => $thread->replies()->paginate(10),
+        ]);
+    }
+
+    /**
+     * Remove the thread.
+     *
+     * @param \App\Thread $thread
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function destroy(Thread $thread)
+    {
+        $this->authorize('forceDelete', $thread);
+
+        try {
+            $thread->delete();
+        } catch (\Exception $e) {
+            Log::error('Failed to delete the thread.');
+        }
+
+        return redirect(route('threads.index'));
+    }
+
+    /**
+     * Fetch all relevant threads.
+     *
+     * @param \App\Channel $channel
+     * @param \App\Filters\ThreadFilters $filters
+     * @return mixed
+     */
+    protected function getThreads(Channel $channel, ThreadFilters $filters)
+    {
+        $threads = Thread::latest()
+            ->filter($filters);
+
+        if ($channel->exists) {
+            $threads->whereChannelId($channel->id);
+        }
+
+        return $threads;
     }
 }

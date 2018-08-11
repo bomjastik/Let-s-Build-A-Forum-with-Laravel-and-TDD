@@ -5,6 +5,7 @@ namespace App\ViewComposers;
 
 
 use App\Channel;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class ChannelsComposer
@@ -17,6 +18,10 @@ class ChannelsComposer
      */
     public function compose(View $view)
     {
-        $view->with('channels', Channel::all());
+        $channels = Cache::rememberForever('users', function() {
+            return Channel::all();
+        });
+
+        $view->with('channels', $channels);
     }
 }

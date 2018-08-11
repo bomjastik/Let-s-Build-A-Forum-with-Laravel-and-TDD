@@ -18,9 +18,13 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
 
-    Route::resource('threads', 'ThreadController', ['only' => ['create', 'store']]);
+    Route::resource('threads', 'ThreadController', ['only' => ['create', 'store', 'destroy']]);
 
     Route::resource('threads.replies', 'ReplyController', ['only' => ['store']]);
+
+    Route::post('replies/{reply}/favorites', 'FavoriteController@store')->name('replies.favorites');
+
+    Route::get('profiles/{user}', 'ProfileController@show')->name('profile.show');
 });
 
 Route::get('threads/{channel?}', 'ThreadController@index')->name('threads.index');
